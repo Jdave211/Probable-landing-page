@@ -139,6 +139,7 @@ export const Lid = ({
   src?: string;
 }) => {
   const isVideo = Boolean(src && /\.(mp4|webm|mov)(\?.*)?$/i.test(src));
+  const isYouTube = Boolean(src && (src.includes('youtube.com') || src.includes('youtu.be')));
 
   return (
     <div className="relative [perspective:800px]">
@@ -173,7 +174,14 @@ export const Lid = ({
         className="absolute inset-0 h-96 w-[32rem] rounded-2xl bg-[#010101] p-2"
       >
         <div className="absolute inset-0 rounded-lg bg-[#272729]" />
-        {isVideo ? (
+        {isYouTube ? (
+          <iframe
+            src={src}
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            className="absolute inset-0 h-full w-full rounded-lg object-cover object-left-top"
+          />
+        ) : isVideo ? (
           <video
             src={src}
             autoPlay
