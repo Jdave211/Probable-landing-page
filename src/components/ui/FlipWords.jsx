@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 export const FlipWords = ({
@@ -7,22 +7,27 @@ export const FlipWords = ({
   className = ""
 }) => {
   const [currentWord, setCurrentWord] = useState(words[0]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const wordsRef = useRef(words);
 
-  const startAnimation = useCallback(() => {
-    setCurrentWord((prevWord) => {
-      const currentIndex = words.indexOf(prevWord);
-      const nextIndex = words[currentIndex + 1] ? currentIndex + 1 : 0;
-      return words[nextIndex];
-    });
+  // Update the ref when words change
+  useEffect(() => {
+    wordsRef.current = words;
   }, [words]);
 
   useEffect(() => {
+    if (!words || words.length === 0) return;
+
     const interval = setInterval(() => {
-      startAnimation();
+      setCurrentIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % wordsRef.current.length;
+        setCurrentWord(wordsRef.current[nextIndex]);
+        return nextIndex;
+      });
     }, duration);
     
     return () => clearInterval(interval);
-  }, [startAnimation, duration]);
+  }, [duration, words.length]);
 
   return (
     <AnimatePresence mode="wait">
