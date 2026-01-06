@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import { TrendingUp, DollarSign, Calendar, ExternalLink, BarChart2, Droplets, Clock } from 'lucide-react';
 import './MarketCard.css';
 
-export default function MarketCard({ market, onClick }) {
+function MarketCard({ market, onClick }) {
   const {
     title,
     question,
@@ -158,3 +159,5 @@ export default function MarketCard({ market, onClick }) {
     </div>
   );
 }
+
+export default memo(MarketCard);
