@@ -15,7 +15,7 @@ export default function MacbookScrollDemo() {
             <Badge className="h-10 w-10 -rotate-12 transform" />
           </a>
         }
-        src={`/demo/demo.mov`}
+        src={`https://www.youtube.com/embed/aBkb_wY4yKs?autoplay=1&mute=1&loop=1&playlist=aBkb_wY4yKs`}
         showGradient={false}
       />
     </div>
