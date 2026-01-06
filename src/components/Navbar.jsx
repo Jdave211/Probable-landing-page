@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Shield } from 'lucide-react';
 import probableLogo from '../assets/logos/probable.png';
 import { useWaitlist } from '../contexts/WaitlistContext';
 import './Navbar.css';
 
-export default function Navbar() {
+function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -57,3 +57,5 @@ export default function Navbar() {
     </nav>
   );
 }
+
+export default memo(Navbar);
