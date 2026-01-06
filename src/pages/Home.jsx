@@ -1,15 +1,21 @@
-import { useMemo, useState, useEffect, lazy, Suspense } from 'react';
+import { useMemo, useState, useEffect, lazy, Suspense, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, TrendingUp, Zap, Target, Sparkles, ChevronRight, ArrowRight, Globe, BarChart3, Shield, Brain, LineChart, User, Bot } from 'lucide-react';
 import MarketCard from '../components/MarketCard';
-import { LampContainer } from '../components/ui/Lamp';
-import { ShootingStars } from '../components/ui/ShootingStars';
-import { StarsBackground } from '../components/ui/StarsBackground';
 import { FlipWords } from '../components/ui/FlipWords';
 import { useWaitlist } from '../contexts/WaitlistContext';
 import './Home.css';
 
-// Lazy-load heavy below-the-fold components (keeps landing page identical, smaller initial bundle)
+// Lazy-load ALL heavy components for better performance
+const LampContainer = lazy(() =>
+  import('../components/ui/Lamp').then((m) => ({ default: m.LampContainer }))
+);
+const ShootingStars = lazy(() =>
+  import('../components/ui/ShootingStars').then((m) => ({ default: m.ShootingStars }))
+);
+const StarsBackground = lazy(() =>
+  import('../components/ui/StarsBackground').then((m) => ({ default: m.StarsBackground }))
+);
 const MacbookScroll = lazy(() =>
   import('../components/ui/macbook-scroll').then((m) => ({ default: m.MacbookScroll }))
 );
@@ -56,8 +62,31 @@ import hedge4Img from '../assets/hedges/hedge4.png';
 // Chat demo image
 import chatImg from '../assets/chat.png';
 
+// Static data moved outside component for better performance
+const LOGO_ITEMS = [
+  { logo: cibcLogo, alt: 'CIBC' },
+  { logo: jpmorganLogo, alt: 'JPMorgan' },
+  { logo: amazonLogo, alt: 'Amazon' },
+  { logo: scotiabankLogo, alt: 'Scotiabank' },
+  { logo: googleLogo, alt: 'Google' },
+  { logo: waterlooLogo, alt: 'University of Waterloo' },
+  { logo: uoftLogo, alt: 'University of Toronto' },
+  { logo: uberLogo, alt: 'Uber' },
+  { logo: yorkLogo, alt: 'York University' },
+  { logo: bellLogo, alt: 'Bell' },
+  { logo: carletonLogo, alt: 'Carleton University' },
+  { logo: doordashLogo, alt: 'DoorDash' },
+  { logo: netflixLogo, alt: 'Netflix' },
+  { logo: rbcLogo, alt: 'RBC' },
+  { logo: bmoLogo, alt: 'BMO' },
+  { logo: osuLogo, alt: 'OSU' },
+  { logo: citiLogo, alt: 'Citi' },
+];
 
-export default function Home() {
+// Duplicate for seamless loop
+const ALL_LOGOS = [...LOGO_ITEMS, ...LOGO_ITEMS];
+
+function Home() {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [currentWord, setCurrentWord] = useState(0);
@@ -128,13 +157,16 @@ export default function Home() {
 
   return (
     <div className="home-page relative w-full overflow-hidden bg-slate-950">
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <ShootingStars />
-        <StarsBackground />
-      </div>
+      <Suspense fallback={null}>
+        <div className="fixed inset-0 z-0 pointer-events-none">
+          <ShootingStars />
+          <StarsBackground />
+        </div>
+      </Suspense>
 
       {/* Hero Section */}
-      <LampContainer className="hero-section">
+      <Suspense fallback={<div style={{ height: '100vh' }} />}>
+        <LampContainer className="hero-section">
         <div className="hero-content relative z-50 flex flex-col items-center justify-center">
           <h1 className="hero-title text-center">
             <FlipWords 
@@ -161,16 +193,10 @@ export default function Home() {
           </div>
         </div>
       </LampContainer>
+      </Suspense>
 
       {/* How It Works Section */}
       <section className="how-it-works relative z-10" id="how-it-works">
-        {/* Shooting Stars */}
-        <div className="shooting-stars">
-          <div className="star"></div>
-          <div className="star"></div>
-          <div className="star"></div>
-        </div>
-
         <div className="how-it-works-wrapper">
           <div className="how-it-works-header">
             <h2 className="how-it-works-title">
@@ -185,7 +211,7 @@ export default function Home() {
             {/* MacBook Scroll Demo */}
             <Suspense fallback={<div style={{ height: 520 }} />}>
               <MacbookScroll
-                src="/demo/demo.mov"
+                src="https://www.youtube.com/embed/aBkb_wY4yKs?autoplay=1&mute=1&loop=1&playlist=aBkb_wY4yKs"
                 showGradient={false}
                 showTitle={false}
               />
@@ -241,13 +267,6 @@ export default function Home() {
 
       {/* Who Uses Probable Section */}
       <section className="who-uses-section">
-        {/* Shooting Stars */}
-        <div className="shooting-stars">
-          <div className="star"></div>
-          <div className="star"></div>
-          <div className="star"></div>
-        </div>
-
         <div className="who-uses-wrapper">
           <div className="who-uses-header">
             <h2 className="who-uses-title">
@@ -261,41 +280,41 @@ export default function Home() {
           <div className="user-personas-grid">
             <div className="personas-scroll-track">
               <div className="persona-card">
-                <img src={analystImg} alt="Analysts" className="persona-image" />
+                <img src={analystImg} alt="Analysts" className="persona-image" loading="lazy" />
               </div>
               <div className="persona-card">
-                <img src={tradersImg} alt="Traders" className="persona-image" />
+                <img src={tradersImg} alt="Traders" className="persona-image" loading="lazy" />
               </div>
               <div className="persona-card">
-                <img src={investorsImg} alt="Investors" className="persona-image" />
+                <img src={investorsImg} alt="Investors" className="persona-image" loading="lazy" />
               </div>
               <div className="persona-card">
-                <img src={foundersImg} alt="Founders" className="persona-image" />
+                <img src={foundersImg} alt="Founders" className="persona-image" loading="lazy" />
               </div>
               <div className="persona-card">
-                <img src={economistsImg} alt="Economists" className="persona-image" />
+                <img src={economistsImg} alt="Economists" className="persona-image" loading="lazy" />
               </div>
               <div className="persona-card">
-                <img src={researchersImg} alt="Researchers" className="persona-image" />
+                <img src={researchersImg} alt="Researchers" className="persona-image" loading="lazy" />
               </div>
               {/* Duplicate for seamless loop */}
               <div className="persona-card">
-                <img src={analystImg} alt="Analysts" className="persona-image" />
+                <img src={analystImg} alt="Analysts" className="persona-image" loading="lazy" />
               </div>
               <div className="persona-card">
-                <img src={tradersImg} alt="Traders" className="persona-image" />
+                <img src={tradersImg} alt="Traders" className="persona-image" loading="lazy" />
               </div>
               <div className="persona-card">
-                <img src={investorsImg} alt="Investors" className="persona-image" />
+                <img src={investorsImg} alt="Investors" className="persona-image" loading="lazy" />
               </div>
               <div className="persona-card">
-                <img src={foundersImg} alt="Founders" className="persona-image" />
+                <img src={foundersImg} alt="Founders" className="persona-image" loading="lazy" />
               </div>
               <div className="persona-card">
-                <img src={economistsImg} alt="Economists" className="persona-image" />
+                <img src={economistsImg} alt="Economists" className="persona-image" loading="lazy" />
               </div>
               <div className="persona-card">
-                <img src={researchersImg} alt="Researchers" className="persona-image" />
+                <img src={researchersImg} alt="Researchers" className="persona-image" loading="lazy" />
               </div>
             </div>
           </div>
@@ -304,12 +323,6 @@ export default function Home() {
 
       {/* Hedging Section */}
       <section className="hedging-section">
-        {/* Shooting Stars */}
-        <div className="shooting-stars">
-          <div className="star"></div>
-          <div className="star"></div>
-          <div className="star"></div>
-        </div>
 
         <div className="hedging-wrapper">
           <div className="hedging-header">
@@ -346,12 +359,6 @@ export default function Home() {
 
       {/* Trusted By Section */}
       <section className="trusted-by-section">
-        {/* Shooting Stars */}
-        <div className="shooting-stars">
-          <div className="star"></div>
-          <div className="star"></div>
-          <div className="star"></div>
-        </div>
         <div className="section-header">
           <p className="trusted-by-label">
             Valued by <span className="label-highlight label-analysts">Analysts</span>, <span className="label-highlight label-researchers">Researchers</span> & <span className="label-highlight label-decision-makers">Decision Makers</span> at
@@ -359,45 +366,9 @@ export default function Home() {
         </div>
         <div className="logo-scroll-container">
           <div className="logo-scroll">
-            {[
-              { logo: cibcLogo, alt: 'CIBC' },
-              { logo: jpmorganLogo, alt: 'JPMorgan' },
-              { logo: amazonLogo, alt: 'Amazon' },
-              { logo: scotiabankLogo, alt: 'Scotiabank' },
-              { logo: googleLogo, alt: 'Google' },
-              { logo: waterlooLogo, alt: 'University of Waterloo' },
-              { logo: uoftLogo, alt: 'University of Toronto' },
-              { logo: uberLogo, alt: 'Uber' },
-              { logo: yorkLogo, alt: 'York University' },
-              { logo: bellLogo, alt: 'Bell' },
-              { logo: carletonLogo, alt: 'Carleton University' },
-              { logo: doordashLogo, alt: 'DoorDash' },
-              { logo: netflixLogo, alt: 'Netflix' },
-              { logo: rbcLogo, alt: 'RBC' },
-              { logo: bmoLogo, alt: 'BMO' },
-              { logo: osuLogo, alt: 'OSU' },
-              { logo: citiLogo, alt: 'Citi' },
-              // Duplicate for seamless loop
-              { logo: cibcLogo, alt: 'CIBC' },
-              { logo: jpmorganLogo, alt: 'JPMorgan' },
-              { logo: amazonLogo, alt: 'Amazon' },
-              { logo: scotiabankLogo, alt: 'Scotiabank' },
-              { logo: googleLogo, alt: 'Google' },
-              { logo: waterlooLogo, alt: 'University of Waterloo' },
-              { logo: uoftLogo, alt: 'University of Toronto' },
-              { logo: uberLogo, alt: 'Uber' },
-              { logo: yorkLogo, alt: 'York University' },
-              { logo: bellLogo, alt: 'Bell' },
-              { logo: carletonLogo, alt: 'Carleton University' },
-              { logo: doordashLogo, alt: 'DoorDash' },
-              { logo: netflixLogo, alt: 'Netflix' },
-              { logo: rbcLogo, alt: 'RBC' },
-              { logo: bmoLogo, alt: 'BMO' },
-              { logo: osuLogo, alt: 'OSU' },
-              { logo: citiLogo, alt: 'Citi' },
-            ].map((item, index) => (
+            {ALL_LOGOS.map((item, index) => (
               <div key={index} className="logo-item">
-                <img src={item.logo} alt={item.alt} />
+                <img src={item.logo} alt={item.alt} loading="lazy" />
               </div>
             ))}
           </div>
@@ -425,6 +396,7 @@ export default function Home() {
                 <img
                   src={chatImg}
                   alt="Probable chat example"
+                  loading="lazy"
                   className="chat-demo-image"
                   loading="lazy"
                   decoding="async"
@@ -499,3 +471,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default memo(Home);
