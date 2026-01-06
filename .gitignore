@@ -117,3 +117,10 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# Large video files
+*.mov
+*.mp4
+*.avi
+*.mkv
+*.webm
+
