@@ -32,6 +32,13 @@ body {
   background-color: #0d1117; /* Match navbar and hero background */
 }
 
+/* When navbar wraps to 2 rows on small phones, avoid content sitting under it */
+@media (max-width: 640px) {
+  .app {
+    padding-top: 120px;
+  }
+}
+
 
 .user-menu-wrapper {
   position: relative;
