@@ -8,17 +8,27 @@ export async function submitWaitlistToSupabase({
   useCases = [],
   source = 'client_waitlist_modal',
 }) {
-  const { error } = await supabase.from('waitlist').insert({
+  const normalizedEmail = (email || '').trim().toLowerCase();
+
+  // Prefer upsert to avoid duplicates (requires a unique constraint on email to fully work).
+  // If the table doesn't have that constraint, we still handle duplicate errors gracefully.
+  const { error } = await supabase.from('waitlist_users').upsert({
     name,
-    email,
+    email: normalizedEmail,
     profession,
     audience,
     use_cases: useCases,
     source,
-  });
+  }, { onConflict: 'email' });
 
-  if (error) throw error;
-  return { ok: true };
+  // If a unique constraint exists and the user is already present, treat it as success.
+  // Postgres unique violation: 23505 (surface varies depending on config).
+  if (error) {
+    if (error?.code === '23505') return { ok: true, alreadyJoined: true };
+    throw error;
+  }
+
+  return { ok: true, alreadyJoined: false };
 }
 
 export async function submitDemoRequestToSupabase({
