@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { AlertCircle, Briefcase, CheckCircle, GraduationCap, LineChart, Mail, User } from 'lucide-react';
+import { AlertCircle, Briefcase, Check, CheckCircle, GraduationCap, LineChart, Mail, User } from 'lucide-react';
 import probableLogo from '../assets/logos/probable.png';
 import { submitWaitlistToSupabase } from '../services/leadsSupabase';
 import './AuthModal.css';
@@ -94,6 +94,11 @@ export default function WaitlistModal({ isOpen, onClose }) {
         source: 'client_waitlist_modal',
       });
       setSuccess(true);
+
+      // Give a tiny moment for the success state to render, then close.
+      setTimeout(() => {
+        onClose?.();
+      }, 450);
     } catch (err) {
       setError(err?.message || 'Something went wrong. Please try again.');
     } finally {
@@ -229,7 +234,8 @@ export default function WaitlistModal({ isOpen, onClose }) {
         ) : (
           <div className="auth-form">
             <button type="button" className="auth-button primary" onClick={onClose}>
-              Close
+              <Check size={16} style={{ marginRight: 8 }} />
+              Joined
             </button>
           </div>
         )}

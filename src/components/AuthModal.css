@@ -29,19 +29,19 @@
 .auth-modal-content {
   position: relative;
   width: 100%;
-  max-width: 420px;
+  max-width: 500px;
   background: rgba(22, 27, 34, 0.7);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
-  padding: 40px;
+  padding: 32px 24px;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.05) inset,
     0 1px 0 rgba(255, 255, 255, 0.1) inset;
   animation: slideUp 0.3s ease-out;
-  max-height: 90vh;
+  max-height: 92vh;
   overflow-y: auto;
 }
 
@@ -76,15 +76,15 @@
 /* Auth Header */
 .auth-modal-header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 }
 
 .auth-logo {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 12px;
-  height: 50px;
+  margin-bottom: 8px;
+  height: 40px;
   min-height: 0;
   line-height: 0;
   padding: 0;
@@ -92,28 +92,28 @@
 }
 
 .auth-logo .logo-icon {
-  height: 50px;
+  height: 40px;
   width: auto;
-  max-width: 180px;
+  max-width: 150px;
   object-fit: contain;
   display: block;
-  transform: scale(1.6);
+  transform: scale(1.4);
   transform-origin: center;
 }
 
 .auth-modal-header h1 {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 600;
   color: #fff;
-  margin: 0 0 8px 0;
+  margin: 0 0 6px 0;
   letter-spacing: -0.5px;
 }
 
 .auth-modal-header p {
-  font-size: 15px;
+  font-size: 14px;
   color: #8b949e;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 /* Alert Messages */
@@ -149,6 +149,12 @@
 }
 
 .onboarding-pill-row.vertical {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.onboarding-pill-row.vertical {
   flex-direction: column;
   gap: 12px;
 }
@@ -180,11 +186,11 @@
 .onboarding-card {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   background: rgba(33, 38, 45, 0.6);
   border: 1px solid rgba(99, 110, 123, 0.6);
   border-radius: 8px;
-  padding: 12px 16px;
+  padding: 10px 12px;
   width: 100%;
   text-align: left;
   cursor: pointer;
@@ -434,16 +440,77 @@
 
 /* Responsive */
 @media (max-width: 640px) {
+  .auth-modal-overlay {
+    padding: 12px;
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+  
   .auth-modal-content {
-    padding: 32px 24px;
-    max-height: 95vh;
+    padding: 24px 18px;
+    max-height: calc(100vh - 60px);
+    border-radius: 12px;
+  }
+
+  .auth-modal-header {
+    margin-bottom: 16px;
   }
 
   .auth-modal-header h1 {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .auth-modal-header p {
+    font-size: 13px;
+  }
+  
+  .auth-logo {
+    margin-bottom: 6px;
+    height: 32px;
+  }
+  
+  .auth-logo .logo-icon {
+    height: 32px;
+    transform: scale(1.2);
+  }
+  
+  .auth-form {
+    gap: 14px;
+  }
+  
+  .form-group {
+    gap: 6px;
+  }
+  
+  .form-group label {
+    font-size: 13px;
+  }
+  
+  .onboarding-pill {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .onboarding-card {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  
+  .onboarding-card-text strong {
+    font-size: 13px;
+  }
+  
+  .onboarding-card-text span {
+    font-size: 11px;
+  }
+  
+  .auth-alert {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  
+  .auth-button {
+    padding: 12px 20px;
     font-size: 14px;
   }
 }

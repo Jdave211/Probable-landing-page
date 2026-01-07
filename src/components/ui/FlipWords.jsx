@@ -1,79 +1,51 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 export const FlipWords = ({
-  words,
+  words = [],
   duration = 2300,
-  className = ""
+  className = "",
 }) => {
-  const [currentWord, setCurrentWord] = useState(words[0]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const wordsRef = useRef(words);
-
-  // Update the ref when words change
-  useEffect(() => {
-    wordsRef.current = words;
-  }, [words]);
+  const safeWords = useMemo(
+    () => (Array.isArray(words) ? words.filter(Boolean) : []),
+    [words]
+  );
+  const wordsSignature = useMemo(() => safeWords.join("\u0000"), [safeWords]);
 
   useEffect(() => {
-    if (!words || words.length === 0) return;
+    // If the words array changes, ensure index remains in-bounds and start from 0.
+    setIndex(0);
+  }, [wordsSignature]);
 
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => {
-        const nextIndex = (prevIndex + 1) % wordsRef.current.length;
-        setCurrentWord(wordsRef.current[nextIndex]);
-        return nextIndex;
-      });
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (safeWords.length <= 1) return;
+    const id = setInterval(() => {
+      setIndex((prev) => (prev + 1) % safeWords.length);
     }, duration);
-    
-    return () => clearInterval(interval);
-  }, [duration, words.length]);
+    return () => clearInterval(id);
+  }, [duration, safeWords.length, wordsSignature]);
+
+  const currentWord = safeWords[index] ?? safeWords[0] ?? "";
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: 10,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 0.4,
-          ease: "easeInOut",
-          type: "spring",
-          stiffness: 100,
-          damping: 10,
-        }}
-        exit={{
-          opacity: 0,
-          y: -40,
-          x: 40,
-          filter: "blur(8px)",
-          scale: 2,
-          position: "absolute",
-        }}
-        className={`flip-words-container ${className}`}
-        key={currentWord}
-        style={{ display: "inline-block", position: "relative" }}
-      >
-        {currentWord.split("").map((letter, index) => (
-          <motion.span
-            key={currentWord + index}
-            initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{
-              delay: index * 0.08,
-              duration: 0.4,
-            }}
-            style={{ display: "inline-block", whiteSpace: "pre" }}
-          >
-            {letter}
-          </motion.span>
-        ))}
-      </motion.div>
-    </AnimatePresence>
+    <span
+      className={`flip-words-container ${className}`}
+      style={{ display: "inline-block", position: "relative" }}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={`${index}-${currentWord}`}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8, position: "absolute" }}
+          transition={{ duration: 0.22, ease: "easeOut" }}
+          style={{ display: "inline-block", whiteSpace: "nowrap" }}
+        >
+          {currentWord}
+        </motion.span>
+      </AnimatePresence>
+    </span>
   );
 };
