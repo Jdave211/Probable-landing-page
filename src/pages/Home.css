@@ -8,6 +8,32 @@
   min-height: 100vh;
 }
 
+/* Performance optimizations - will-change for animations */
+.logo-scroll,
+.personas-scroll-track,
+.flip-words-container,
+.persona-card,
+.sticky-note {
+  will-change: transform;
+}
+
+.hero-title,
+.hero-subtitle {
+  will-change: opacity, transform;
+}
+
+/* Reduce animations on mobile for better performance */
+@media (max-width: 768px) {
+  .logo-scroll,
+  .personas-scroll-track {
+    animation-duration: 60s !important; /* Slower on mobile = less janky */
+  }
+  
+  .sticky-note {
+    transform: none !important; /* Remove tilt on mobile */
+  }
+}
+
 /* Utilities needed for new components */
 .bg-slate-950 { background-color: #0d1117; }
 .text-white { color: #ffffff; }
@@ -37,16 +63,16 @@
 /* Base (Mobile/Small Laptop) */
 .lamp-content-container {
   padding-top: 0 !important; /* Remove padding - position text in the light */
-  margin-top: -30vh !important; /* Pull text up into the lamp light area */
+  margin-top: -18vh !important; /* Less aggressive on phones so text doesn't get clipped */
 }
 
 /* Shift lamp effect up slightly on smaller screens if needed, or keep default */
 .lamp-effect-container {
-  top: -5rem !important; 
+  top: -3rem !important; 
 }
 
 .lamp-left-beam, .lamp-right-beam {
-  width: 30rem;
+  width: 22rem;
 }
 
 /* Medium Screens (Tablet/Laptop) */
@@ -350,19 +376,19 @@
 /* Responsive spacing between video and cards */
 @media (min-width: 768px) {
   .how-it-works-content {
-    gap: 320px; /* More space on tablet */
+    gap: 160px; /* Keep flow quick on tablet */
   }
 }
 
 @media (min-width: 1024px) {
   .how-it-works-content {
-    gap: 420px; /* Even more space on desktop */
+    gap: 220px; /* Comfortable, but not a huge dead zone */
   }
 }
 
 @media (min-width: 1440px) {
   .how-it-works-content {
-    gap: 200px; /* Maximum space on large screens */
+    gap: 240px;
   }
 }
 
@@ -903,11 +929,69 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  /* Reduce overall section padding on phones */
+  .how-it-works,
+  .who-uses-section,
+  .hedging-section,
+  .trusted-by-section,
+  .chat-demo-section,
+  .action-section {
+    padding: 72px 16px;
+  }
+
+  .hero-content {
+    padding: 0 12px;
+  }
+
   .hero-title { font-size: 42px; }
+  .hero-subtitle { font-size: 18px; margin-bottom: 28px; }
+  .home-page .btn-primary,
+  .home-page .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
   .chat-demo-card { flex-direction: column; }
+  .chat-demo-card { gap: 24px; }
   .action-demos-grid { grid-template-columns: 1fr; }
   .steps-container { flex-direction: column; align-items: center; }
+  .steps-container::before { display: none; }
+  .step-card {
+    width: min(420px, 100%);
+    padding: 22px;
+  }
   
   .logo-item img { height: 40px; } /* Smaller logos on mobile */
   .persona-card { width: 220px; height: 300px; } /* Smaller cards on mobile */
+
+  .hedging-examples {
+    min-height: auto;
+    padding: 40px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 36px; }
+  .how-it-works-title,
+  .who-uses-title,
+  .hedging-title,
+  .chat-demo-title,
+  .global-title {
+    font-size: 32px;
+  }
+
+  .how-it-works-subtitle,
+  .who-uses-subtitle,
+  .hedging-subtitle,
+  .chat-demo-description,
+  .global-subtitle {
+    font-size: 16px;
+  }
+
+  .logo-scroll-container::before,
+  .logo-scroll-container::after {
+    width: 48px;
+  }
+
+  .persona-card { width: 180px; height: 240px; }
 }

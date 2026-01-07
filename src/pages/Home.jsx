@@ -4,18 +4,12 @@ import { Search, TrendingUp, Zap, Target, Sparkles, ChevronRight, ArrowRight, Gl
 import MarketCard from '../components/MarketCard';
 import { FlipWords } from '../components/ui/FlipWords';
 import { useWaitlist } from '../contexts/WaitlistContext';
+import { LampContainer } from '../components/ui/Lamp';
+import { ShootingStars } from '../components/ui/ShootingStars';
+import { StarsBackground } from '../components/ui/StarsBackground';
 import './Home.css';
 
-// Lazy-load ALL heavy components for better performance
-const LampContainer = lazy(() =>
-  import('../components/ui/Lamp').then((m) => ({ default: m.LampContainer }))
-);
-const ShootingStars = lazy(() =>
-  import('../components/ui/ShootingStars').then((m) => ({ default: m.ShootingStars }))
-);
-const StarsBackground = lazy(() =>
-  import('../components/ui/StarsBackground').then((m) => ({ default: m.StarsBackground }))
-);
+// Lazy-load heavy below-the-fold components
 const MacbookScroll = lazy(() =>
   import('../components/ui/macbook-scroll').then((m) => ({ default: m.MacbookScroll }))
 );
@@ -91,8 +85,25 @@ function Home() {
   const [query, setQuery] = useState('');
   const [currentWord, setCurrentWord] = useState(0);
   const { openWaitlist } = useWaitlist();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const words = ['predict', 'hedge', 'understand', 'forecast'];
+
+  // Detect mobile for performance optimizations (throttled)
+  useEffect(() => {
+    let timeoutId;
+    const checkMobile = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setIsMobile(window.innerWidth <= 768);
+      }, 150);
+    };
+    window.addEventListener('resize', checkMobile);
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -157,16 +168,16 @@ function Home() {
 
   return (
     <div className="home-page relative w-full overflow-hidden bg-slate-950">
-      <Suspense fallback={null}>
+      {/* Hide expensive background animations on mobile for better performance */}
+      {!isMobile && (
         <div className="fixed inset-0 z-0 pointer-events-none">
           <ShootingStars />
           <StarsBackground />
         </div>
-      </Suspense>
+      )}
 
       {/* Hero Section */}
-      <Suspense fallback={<div style={{ height: '100vh' }} />}>
-        <LampContainer className="hero-section">
+      <LampContainer className="hero-section">
         <div className="hero-content relative z-50 flex flex-col items-center justify-center">
           <h1 className="hero-title text-center">
             <FlipWords 
@@ -193,7 +204,6 @@ function Home() {
           </div>
         </div>
       </LampContainer>
-      </Suspense>
 
       {/* How It Works Section */}
       <section className="how-it-works relative z-10" id="how-it-works">
@@ -350,9 +360,23 @@ function Home() {
           </div>
 
           <div className="hedging-examples">
-            <Suspense fallback={<div style={{ height: 520 }} />}>
-              <CardStack items={hedgingCards} offset={20} scaleFactor={0.06} />
-            </Suspense>
+            {isMobile ? (
+              <div style={{ display: 'grid', gap: '16px', padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
+                {hedgingCards.map((card) => (
+                  <img 
+                    key={card.id} 
+                    src={card.image} 
+                    alt={`Hedging example ${card.id}`}
+                    style={{ width: '100%', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}
+                    loading="lazy"
+                  />
+                ))}
+              </div>
+            ) : (
+              <Suspense fallback={<div style={{ height: 520 }} />}>
+                <CardStack items={hedgingCards} offset={20} scaleFactor={0.06} />
+              </Suspense>
+            )}
           </div>
         </div>
       </section>
@@ -421,10 +445,12 @@ function Home() {
             </p>
           </div>
 
-          <div className="global-map-container">
-            <Suspense fallback={<div style={{ height: 520 }} />}>
-              <WorldMap
-                dots={[
+          {/* Hide WorldMap on mobile for performance */}
+          {!isMobile && (
+            <div className="global-map-container">
+              <Suspense fallback={<div style={{ height: 520 }} />}>
+                <WorldMap
+                  dots={[
                   // North America ↔ Europe
                   {
                     start: { lat: 40.7128, lng: -74.0060, label: "NY" }, // North America
@@ -464,7 +490,8 @@ function Home() {
                 lineColor="#0ea5e9"
               />
             </Suspense>
-          </div>
+            </div>
+          )}
         </div>
       </section>
 
