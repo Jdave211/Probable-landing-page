@@ -29,7 +29,55 @@
   line-height: 1.6;
 }
 
-/* Demo request form */
+/* Calendly */
+.calendly-container {
+  background: rgba(22, 27, 34, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(139, 148, 158, 0.2);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.calendly-inline-widget {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.support-submit.calendly-open {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  text-decoration: none;
+}
+
+/* Support quick actions */
+.support-quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.support-submit.support-contact {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  text-decoration: none;
+}
+
+.support-note {
+  margin: 0;
+  color: #8b949e;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* Demo request form (legacy) */
 .support-alert {
   display: flex;
   align-items: center;
@@ -218,6 +266,10 @@
   }
   .support-form-row {
     grid-template-columns: 1fr;
+  }
+
+  .calendly-container {
+    padding: 14px;
   }
 }
 

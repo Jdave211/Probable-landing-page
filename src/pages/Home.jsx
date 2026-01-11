@@ -86,6 +86,8 @@ function Home() {
   const [currentWord, setCurrentWord] = useState(0);
   const { openWaitlist } = useWaitlist();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const CALENDLY_URL =
+    'https://calendly.com/founders-joinprobable/30min?month=2026-01&date=2026-01-17';
 
   const words = ['predict', 'hedge', 'understand', 'forecast'];
 
@@ -196,11 +198,9 @@ function Home() {
             }}>
               Join Waitlist
             </button>
-            <button className="btn-secondary" onClick={() => {
-              navigate('/support');
-            }}>
+            <a className="btn-secondary" href={CALENDLY_URL} target="_blank" rel="noreferrer">
               Schedule Demo
-            </button>
+            </a>
           </div>
         </div>
       </LampContainer>
