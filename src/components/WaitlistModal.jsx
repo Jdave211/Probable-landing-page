@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { AlertCircle, Briefcase, Check, CheckCircle, GraduationCap, LineChart, Mail, User } from 'lucide-react';
 import probableLogo from '../assets/logos/probable.png';
 import { submitWaitlistToSupabase } from '../services/leadsSupabase';
+import { trackEvent } from '../lib/analytics';
 import './AuthModal.css';
 
 export default function WaitlistModal({ isOpen, onClose }) {
@@ -94,6 +95,12 @@ export default function WaitlistModal({ isOpen, onClose }) {
         source: 'client_waitlist_modal',
       });
       setSuccess(true);
+      trackEvent('waitlist_submit_success', {
+        placement: 'waitlist_modal',
+        profession,
+        audience,
+        use_cases_count: Array.isArray(useCases) ? useCases.length : 0,
+      });
 
       // Give a tiny moment for the success state to render, then close.
       setTimeout(() => {
@@ -101,6 +108,10 @@ export default function WaitlistModal({ isOpen, onClose }) {
       }, 450);
     } catch (err) {
       setError(err?.message || 'Something went wrong. Please try again.');
+      trackEvent('waitlist_submit_error', {
+        placement: 'waitlist_modal',
+        message: String(err?.message || 'unknown'),
+      });
     } finally {
       setLoading(false);
     }

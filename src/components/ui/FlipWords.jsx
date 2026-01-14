@@ -26,26 +26,26 @@ export const FlipWords = ({
     }, duration);
     return () => clearInterval(id);
   }, [duration, safeWords.length, wordsSignature]);
-
+    
   const currentWord = safeWords[index] ?? safeWords[0] ?? "";
 
   return (
     <span
-      className={`flip-words-container ${className}`}
-      style={{ display: "inline-block", position: "relative" }}
-    >
+        className={`flip-words-container ${className}`}
+        style={{ display: "inline-block", position: "relative" }}
+      >
       <AnimatePresence mode="wait" initial={false}>
-        <motion.span
+          <motion.span
           key={`${index}-${currentWord}`}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8, position: "absolute" }}
           transition={{ duration: 0.22, ease: "easeOut" }}
           style={{ display: "inline-block", whiteSpace: "nowrap" }}
-        >
+          >
           {currentWord}
-        </motion.span>
-      </AnimatePresence>
+          </motion.span>
+    </AnimatePresence>
     </span>
   );
 };

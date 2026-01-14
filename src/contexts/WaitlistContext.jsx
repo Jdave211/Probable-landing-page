@@ -1,4 +1,5 @@
 import { createContext, useContext, useMemo, useState } from 'react';
+import { trackEvent } from '../lib/analytics';
 
 const WaitlistContext = createContext(null);
 
@@ -8,7 +9,10 @@ export function WaitlistProvider({ children }) {
   const value = useMemo(
     () => ({
       isWaitlistOpen,
-      openWaitlist: () => setIsWaitlistOpen(true),
+      openWaitlist: () => {
+        trackEvent('waitlist_open', { placement: 'global' });
+        setIsWaitlistOpen(true);
+      },
       closeWaitlist: () => setIsWaitlistOpen(false),
     }),
     [isWaitlistOpen]
