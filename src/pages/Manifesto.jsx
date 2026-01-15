@@ -1,12 +1,10 @@
 import './Manifesto.css';
-import { ShootingStars } from '../components/ui/ShootingStars';
 import { StarsBackground } from '../components/ui/StarsBackground';
 
 export default function Manifesto() {
   return (
     <div className="manifesto-page">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <ShootingStars />
         <StarsBackground />
       </div>
       

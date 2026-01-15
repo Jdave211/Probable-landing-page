@@ -5,14 +5,10 @@ import MarketCard from '../components/MarketCard';
 import { FlipWords } from '../components/ui/FlipWords';
 import { useWaitlist } from '../contexts/WaitlistContext';
 import { LampContainer } from '../components/ui/Lamp';
-import { ShootingStars } from '../components/ui/ShootingStars';
 import { StarsBackground } from '../components/ui/StarsBackground';
 import './Home.css';
 
 // Lazy-load heavy below-the-fold components
-const MacbookScroll = lazy(() =>
-  import('../components/ui/macbook-scroll').then((m) => ({ default: m.MacbookScroll }))
-);
 const CardStack = lazy(() =>
   import('../components/ui/CardStack').then((m) => ({ default: m.CardStack }))
 );
@@ -175,7 +171,6 @@ function Home() {
       {/* Hide expensive background animations on mobile for better performance */}
       {!isMobile && (
         <div className="fixed inset-0 z-0 pointer-events-none">
-          <ShootingStars />
           <StarsBackground />
         </div>
       )}
@@ -231,14 +226,31 @@ function Home() {
           </div>
 
           <div className="how-it-works-content">
-            {/* MacBook Scroll Demo */}
-            <Suspense fallback={<div style={{ height: 520 }} />}>
-              <MacbookScroll
+            {/* Video Demo */}
+            <div className="demo-video-container" style={{ 
+              width: '100%', 
+              maxWidth: '800px', 
+              margin: '0 auto',
+              borderRadius: '16px',
+              overflow: 'hidden',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              background: '#000',
+              aspectRatio: '16/9'
+            }}>
+              <iframe
                 src="https://www.youtube.com/embed/aBkb_wY4yKs?autoplay=1&mute=1&loop=1&playlist=aBkb_wY4yKs"
-                showGradient={false}
-                showTitle={false}
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  border: 'none',
+                  display: 'block'
+                }}
+                title="Probable Demo Video"
               />
-            </Suspense>
+            </div>
 
             {/* Sticky Notes (How it works) */}
             <div className="sticky-notes-container">
