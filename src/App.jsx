@@ -7,8 +7,19 @@ import Support from './pages/Support';
 import Manifesto from './pages/Manifesto';
 import { WaitlistProvider, useWaitlist } from './contexts/WaitlistContext';
 import './App.css';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { trackPageView } from './lib/analytics';
 
 const WaitlistModal = lazy(() => import('./components/WaitlistModal'));
+
+function RouteAnalytics() {
+  const location = useLocation();
+  useEffect(() => {
+    trackPageView(location.pathname);
+  }, [location.pathname]);
+  return null;
+}
 
 function WaitlistModalHost() {
   const { isWaitlistOpen, closeWaitlist } = useWaitlist();
@@ -24,6 +35,7 @@ function AppShell() {
   
   return (
     <div className="app">
+      <RouteAnalytics />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

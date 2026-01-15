@@ -88,6 +88,8 @@ function Home() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const CALENDLY_URL =
     'https://calendly.com/founders-joinprobable/30min?month=2026-01&date=2026-01-17';
+  // lightweight analytics
+  // (no-op unless VITE_GA_MEASUREMENT_ID is set)
 
   const words = ['predict', 'hedge', 'understand', 'forecast'];
 
@@ -198,7 +200,18 @@ function Home() {
             }}>
               Join Waitlist
             </button>
-            <a className="btn-secondary" href={CALENDLY_URL} target="_blank" rel="noreferrer">
+            <a
+              className="btn-secondary"
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => {
+                // defer import to keep initial bundle identical
+                import('../lib/analytics').then(({ trackEvent }) =>
+                  trackEvent('schedule_demo_click', { placement: 'hero' })
+                );
+              }}
+            >
               Schedule Demo
             </a>
           </div>
