@@ -141,3 +141,64 @@ This is a standard Vite SPA. Typical deployment options:
 
 Make sure you set the same `VITE_*` environment variables in your hosting provider.
 
+---
+
+## Analytics (traffic + conversion)
+
+This landing page supports:
+- **First-party analytics in Supabase** (always available once you apply the migration)
+- Optional **Google Analytics 4** tracking (only if you set `VITE_GA_MEASUREMENT_ID`)
+
+### Supabase analytics (recommended)
+
+#### Table
+
+- `public.analytics_events`
+
+Migration:
+- `supabase/migrations/20260106123000_create_analytics_events.sql`
+
+#### Quick queries
+
+```sql
+-- last 100 events
+select created_at, event_name, pathname, params, utm
+from public.analytics_events
+order by created_at desc
+limit 100;
+```
+
+```sql
+-- conversion funnel (last 7 days)
+with w as (
+  select
+    count(*) filter (where event_name = 'waitlist_open') as opens,
+    count(*) filter (where event_name = 'waitlist_submit_success') as submits
+  from public.analytics_events
+  where created_at > now() - interval '7 days'
+)
+select
+  opens,
+  submits,
+  case when opens = 0 then 0 else round((submits::numeric / opens) * 100, 2) end as conversion_percent
+from w;
+```
+
+### Enable GA4 (optional)
+
+Set this env var (locally + in production):
+
+```bash
+VITE_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+```
+
+### Events tracked
+
+- `waitlist_open` (when the waitlist modal is opened)
+- `waitlist_submit_success` / `waitlist_submit_error`
+- `schedule_demo_click` (Calendly link click)
+
+Use GA4 “Events” and “Conversions” to compute:
+- **Waitlist conversion**: `waitlist_submit_success / waitlist_open`
+- **Demo intent**: `schedule_demo_click / pageviews`
+
