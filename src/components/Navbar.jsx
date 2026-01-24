@@ -2,7 +2,6 @@ import { useState, useEffect, memo } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, Shield, X } from 'lucide-react';
 import probableLogo from '../assets/logos/probable.png';
-import { useWaitlist } from '../contexts/WaitlistContext';
 import './Navbar.css';
 
 function Navbar() {
@@ -10,7 +9,6 @@ function Navbar() {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { openWaitlist } = useWaitlist();
 
   useEffect(() => {
     let ticking = false;
@@ -59,12 +57,14 @@ function Navbar() {
           
           <div className="nav-actions">
             {/* Desktop Join Waitlist button */}
-            <button 
+            <a 
+              href="https://3ld3vnq83ev.typeform.com/to/b4TqQNYy"
+              target="_blank"
+              rel="noopener noreferrer"
               className={`btn-login desktop-only ${isScrolled ? 'scrolled' : ''}`}
-              onClick={openWaitlist}
             >
               Join Waitlist
-            </button>
+            </a>
             
             {/* Mobile burger menu */}
             <button 
@@ -91,15 +91,15 @@ function Navbar() {
             <Link to="/manifesto" className="mobile-menu-link" onClick={() => setIsMobileMenuOpen(false)}>
               Manifesto
             </Link>
-            <button 
+            <a 
+              href="https://3ld3vnq83ev.typeform.com/to/b4TqQNYy"
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn-login mobile-menu-cta"
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                openWaitlist();
-              }}
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               Join Waitlist
-            </button>
+            </a>
           </div>
         </div>
       )}

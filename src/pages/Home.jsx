@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Search, TrendingUp, Zap, Target, Sparkles, ChevronRight, ArrowRight, Globe, BarChart3, Shield, Brain, LineChart, User, Bot } from 'lucide-react';
 import MarketCard from '../components/MarketCard';
 import { FlipWords } from '../components/ui/FlipWords';
-import { useWaitlist } from '../contexts/WaitlistContext';
 import { LampContainer } from '../components/ui/Lamp';
 import { StarsBackground } from '../components/ui/StarsBackground';
 import './Home.css';
@@ -80,7 +79,6 @@ function Home() {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [currentWord, setCurrentWord] = useState(0);
-  const { openWaitlist } = useWaitlist();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const CALENDLY_URL =
     'https://calendly.com/founders-joinprobable/30min?month=2026-01&date=2026-01-17';
@@ -190,11 +188,14 @@ function Home() {
           </p>
 
           <div className="hero-cta mt-8">
-            <button className="btn-primary" onClick={() => {
-              openWaitlist();
-            }}>
+            <a 
+              href="https://3ld3vnq83ev.typeform.com/to/b4TqQNYy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary"
+            >
               Join Waitlist
-            </button>
+            </a>
             <a
               className="btn-secondary"
               href={CALENDLY_URL}

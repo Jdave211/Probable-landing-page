@@ -5,13 +5,10 @@ import Home from './pages/Home';
 import Markets from './pages/Markets';
 import Support from './pages/Support';
 import Manifesto from './pages/Manifesto';
-import { WaitlistProvider, useWaitlist } from './contexts/WaitlistContext';
 import './App.css';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { trackPageView } from './lib/analytics';
-
-const WaitlistModal = lazy(() => import('./components/WaitlistModal'));
 
 function RouteAnalytics() {
   const location = useLocation();
@@ -19,15 +16,6 @@ function RouteAnalytics() {
     trackPageView(location.pathname);
   }, [location.pathname]);
   return null;
-}
-
-function WaitlistModalHost() {
-  const { isWaitlistOpen, closeWaitlist } = useWaitlist();
-  return (
-    <Suspense fallback={null}>
-      <WaitlistModal isOpen={isWaitlistOpen} onClose={closeWaitlist} />
-    </Suspense>
-  );
 }
 
 function AppShell() {
@@ -43,7 +31,6 @@ function AppShell() {
         <Route path="/support" element={<Support />} />
         <Route path="/manifesto" element={<Manifesto />} />
       </Routes>
-      <WaitlistModalHost />
     
       <footer className="footer">
         <div className="footer-content">
@@ -64,9 +51,7 @@ function AppShell() {
 
 function App() {
   return (
-    <WaitlistProvider>
       <AppShell />
-    </WaitlistProvider>
   );
 }
 
