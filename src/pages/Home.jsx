@@ -81,7 +81,7 @@ function Home() {
   const [currentWord, setCurrentWord] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const CALENDLY_URL =
-    'https://calendly.com/founders-joinprobable/30min?month=2026-01&date=2026-01-17';
+    'https://calendly.com/founders-joinprobable/probable-demo-clone';
   // lightweight analytics
   // (no-op unless VITE_GA_MEASUREMENT_ID is set)
 
